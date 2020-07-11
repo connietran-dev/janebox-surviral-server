@@ -1,0 +1,18 @@
+{
+  "name": "janebox-apocaly-server",
+  "version": "0.1.0",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/connietran-dev/janebox-apocaly-server.git"
+  },
+  "author": "Connie Tran, Samantha Sexton",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
