@@ -19,15 +19,16 @@ http.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('User connected');
 
+  socket.on('subscribeToTimer', (interval) => {
+    console.log('Client is subscribing to timer with interval ', interval);
+    setInterval(() => {
+      socket.emit('timer', new Date());
+    }, interval);
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
 });
-
-const getApiAndEmit = socket => {
-  const response = new Date();
-  // Emitting a new message. Will be consumed by the client
-  socket.emit("FromAPI", response);
-};
 
 module.exports = app;
