@@ -1,35 +1,26 @@
 const express = require('express');
-const app = require('express')();
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+const socketio = require('socket.io');
+const http = require('http');
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 5000;
+
+const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+
+const router = require('./router');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-  res.send("Welcome to the Surviral API").status(200);
-});
+app.use(router);
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('Listening on: http://localhost:' + PORT);
 });
 
 io.on('connection', (socket) => {
   console.log('User connected');
-
-  socket.on('subscribeToTimer', (interval) => {
-    console.log('Client is subscribing to timer with interval ', interval);
-    setInterval(() => {
-      socket.emit('timer', new Date());
-    }, interval);
-  });
-
-  socket.on('message', ( name, message ) => {
-    console.log('message: ' + message);
-    io.emit('message', { name, message })
-  });
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
