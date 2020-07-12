@@ -44,15 +44,6 @@ io.on('connection', (socket) => {
     callback();
   });
 
-  socket.on('sendMessage', (message, callback) => {
-    // Get user who sent message
-    const user = getUser(socket.id);
-
-    // io.to(user.game).emit('message', { user: user.name, text: message });
-
-    callback();
-  });
-
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
