@@ -25,7 +25,22 @@ io.on('connection', (socket) => {
   console.log('User connected');
 
   socket.on('join', ({ name, game }, callback) => {
-    console.log(name, game);
+    console.log("Username:", name, "Game:", game);
+
+    const { error, user } = addUser({ id: socket.id, name, game });
+
+    if (error) return callback(error);
+
+    // After adding user, emit admin message and broadcast to all users in room
+    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the game ${user.game}` });
+    
+    socket.broadcast.to(user.game).emit('message', { user: 'admin', text: `${user.name} has joined the game ${user.game}!`});
+
+    // If no errors, socket will join the user to the room (ie, game)
+    socket.join(user.game);
+
+    // If there are no errors, this will not be called
+    callback();
   })
 
   socket.on('disconnect', () => {
