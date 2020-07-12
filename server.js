@@ -22,6 +22,10 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('User connected');
 
+  socket.on('join', ({ name, game }, callback) => {
+    console.log(name, game);
+  })
+
   socket.on('disconnect', () => {
     console.log('User disconnected');
   });
