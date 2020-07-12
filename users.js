@@ -29,6 +29,10 @@ const removeUser = (id) => {
 const getUser = (id) => users.find((user) => user.id === id);
 
 // Get all users in Game
-const getUsersInGame = (game) => users.filter((user) => user.game === game);
+const getUsersInGame = (game) => {
+    const filteredUsers = users.filter((user) => user.game === game)
+    console.log("users", filteredUsers);
+    return filteredUsers;
+};
 
 module.exports = { addUser, removeUser, getUser, getUsersInGame };

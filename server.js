@@ -32,16 +32,18 @@ io.on('connection', (socket) => {
 
     if (error) return callback(error);
 
-    // After adding user, emit admin message and broadcast to all users in room
-    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the game ${user.game}` });
-    
-    socket.broadcast.to(user.game).emit('message', { user: 'admin', text: `${user.name} has joined the game ${user.game}!`});
-
     // If no errors, socket will join the user to the room (ie, game)
     socket.join(user.game);
 
+    // After adding user, emit admin message and broadcast to all users in room
+    socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the game ${user.game}` });
+
+    socket.broadcast.to(user.game).emit('message', { user: 'admin', text: `${user.name} has joined the game ${user.game}!` });
+
+    io.to(user.game).emit('roomData', { game: user.game, users: getUsersInGame(user.game) });
+
     // If there are no errors, this will not be called
-    callback();
+    // callback();
   });
 
   socket.on('disconnect', () => {
