@@ -3,7 +3,7 @@ const users = [];
 // id from socket instance
 const addUser = ({ id, name, game }) => {
     name = name.trim().toLowerCase();
-    game = game.trim().toLowerCase();
+    game = game.trim().toUpperCase();
 
     // If same user is trying to sign up for same game, return error
     const existingUser = users.find((user) => user.game === game && user.name === name);
