@@ -2,7 +2,7 @@ const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
 
-const { addUser, removeUser, getUser, getUsersInGame } = require('./users.js');
+const { addUser, removeUser, getUser, getUsersInGame, users } = require('./users.js');
 
 const PORT = process.env.PORT || 5000;
 
@@ -29,22 +29,24 @@ io.on('connection', (socket) => {
     console.log("Username:", name, "Game:", game);
 
     const { error, user } = addUser({ id: socket.id, name, game });
+    users.push(user);
 
     if (error) return callback(error);
-
-    // If no errors, socket will join the user to the room (ie, game)
-    socket.join(user.game);
 
     // After adding user, emit admin message and broadcast to all users in room
     socket.emit('message', { user: 'admin', text: `${user.name}, welcome to the game ${user.game}` });
 
-    socket.broadcast.to(user.game).emit('message', { user: 'admin', text: `${user.name} has joined the game ${user.game}!` });
+    socket.broadcast.to(user.game).emit('message', { user: 'admin', text: `${user.name} has joined the game ${user.game}!`});
 
-    io.to(user.game).emit('roomData', { game: user.game, users: getUsersInGame(user.game) });
+    // socket.emit('roomData', { users: users })
+    // If no errors, socket will join the user to the room (ie, game)
+    socket.join(user.game);
 
     // If there are no errors, this will not be called
-    // callback();
+    callback(user);
   });
+
+  socket.emit('roomData', { users: users })
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
