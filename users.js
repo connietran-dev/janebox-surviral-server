@@ -5,17 +5,16 @@ const addUser = ({ id, name, game }) => {
     name = name.trim().toLowerCase();
     game = game.trim().toLowerCase();
 
-    // If same user is trying to sign up for same game, return error 
+    // If same user is trying to sign up for same game, return error
     const existingUser = users.find((user) => user.game === game && user.name === name);
 
-    if(existingUser) {
+    if (existingUser) {
         return { error: 'Username is taken' }
     }
 
     const user = { id, name, game };
-    users.push(user);
 
-    return { user }
+    return { user: user }
 };
 
 const removeUser = (id) => {
@@ -35,4 +34,4 @@ const getUsersInGame = (game) => {
     return filteredUsers;
 };
 
-module.exports = { addUser, removeUser, getUser, getUsersInGame };
+module.exports = { addUser, removeUser, getUser, getUsersInGame, users };
